@@ -22,16 +22,16 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
   
-// Ruta para subir el archivo Excel
+// Route to upload the Excel file
 app.post('/upload', upload.single('file'), async (req, res) => {
     try {
-      // Lee el archivo Excel
+      // Read the Excel file
       const rows = await readXlsxFile(req.file.path);
       
-      // Elimina la primera fila (encabezados)
+      // Remove the first row (headers)
       rows.shift();
   
-      // Recorre las filas y almacena los datos en MongoDB
+      // Iterate over the rows and store the data in MongoDB
       rows.forEach(row => {
           let liderPrice = typeof row[1] === 'string' ? Number(row[1].replace(/\D/g, '')) : row[1];
           let jumboPrice = typeof row[2] === 'string' ? Number(row[2].replace(/\D/g, '')) : row[2];
@@ -48,7 +48,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   
           data.save();
         });
-      res.send('Archivo subido y datos almacenados con éxito!');
+      res.send('File uploaded and data stored successfully!');
     } catch (error) {
       console.log(error);
       res.sendStatus(400);
@@ -62,7 +62,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       console.log('Connected to MongoDB');
   
       app.listen(3000, () => {
-        console.log('Aplicación escuchando en el puerto 3000');
+        console.log('Application listening on port 3000');
       });
     } catch (error) {
       console.error('Error connecting to MongoDB', error);
@@ -70,4 +70,3 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
   
   run();
-  
